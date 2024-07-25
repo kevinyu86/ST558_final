@@ -5,28 +5,48 @@ editor: visual
 ---
 
 ## Name: Xingwang Yu
+
 ## Final project for ST558
 
+## Introduction
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+briefly describes the data and the variables you have to work with (just discuss the ones you’ll investigate/use in your analysis).
 
-## Running Code
+• describes the purpose of your EDA and ultimate goal of modeling.
+
+diabetes \_ binary \_ health \_ indicators \_ BRFSS2015.csv is a clean dataset of 253,680 survey responses to the CDC's BRFSS2015. The target variable Diabetes_binary has 2 classes. 0 is for no diabetes, and 1 is for prediabetes or diabetes. This dataset has 21 feature variables and is not balanced.
 
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+## Data
+
+```{r setup, warning=FALSE}
+library(tidyverse)
+library(tidyr)
+library(caret)
+library(rpart)
+library(randomForest)
+library(gbm)
+```
+
+First, we read in the data and check the variables via `str()`.
 
 ```{r}
 df <- read.csv("diabetes_binary_health_indicators_BRFSS2015.csv")
 str(df)
 ```
 
-You can add options to executable code like this
+-   We can note that all the variables are category variables except `BMI`, which is the only one numeric variable.
+
+-   We need to covert the category variables to factors with meaningful names.
 
 ```{r}
-#| echo: false
-2 * 2
+df <- df |>
+  mutate(Diabetes_binary = factor(Diabetes_binary,
+                                  levels = c(0, 1, 2),
+                                  labels = c("no diabetes", "prediabetes", "diabetes")))
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
-
 
 # [Click here for the Modeling Page](Modeling.html)

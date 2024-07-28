@@ -8,7 +8,7 @@ editor: visual
 
 ## Final project for ST558
 
-## Introduction
+## 1. Introduction
 
 briefly describes the data and the variables you have to work with (just discuss the ones you’ll investigate/use in your analysis).
 
@@ -18,15 +18,12 @@ diabetes \_ binary \_ health \_ indicators \_ BRFSS2015.csv is a clean dataset o
 
 When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
 
-## Data
+## 2. Get the Data
 
 ```{r setup, warning=FALSE}
 library(tidyverse)
 library(tidyr)
-library(caret)
-library(rpart)
-library(randomForest)
-library(gbm)
+library(ggplot2)
 ```
 
 First, we read in the data and check the variables via `str()`.
@@ -36,17 +33,165 @@ df <- read.csv("diabetes_binary_health_indicators_BRFSS2015.csv")
 str(df)
 ```
 
+-   The data includes 253680 observations and 22 varibales.
+
 -   We can note that all the variables are category variables except `BMI`, which is the only one numeric variable.
 
 -   We need to covert the category variables to factors with meaningful names.
 
+## 3. Clean the data
+
+### 3.1 Select variables
+
+Firstly, I will select my interest variables which will be used in hte following investigation, and convert the category variables into factors.
+
+In order to do this part, I referenced the codebook which says what each column/feature/question is: <https://www.cdc.gov/brfss/annual_data/2015/pdf/codebook15_llcp.pdf>
+
 ```{r}
-df <- df |>
+diab_df <- df |>
+  select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Veggies, HvyAlcoholConsump, DiffWalk, Sex, Age) |>
   mutate(Diabetes_binary = factor(Diabetes_binary,
                                   levels = c(0, 1, 2),
-                                  labels = c("no diabetes", "prediabetes", "diabetes")))
+                                  labels = c("no diabetes", "prediabetes", "diabetes"))) |>
+  mutate(HighBP = factor(HighBP,
+                                  levels = c(0, 1),
+                                  labels = c("no high", "high BP"))) |>
+  mutate(HighChol = factor(HighChol,
+                                  levels = c(0, 1),
+                                  labels = c("no high cholesterol", "high cholesterol"))) |>
+
+  mutate(Smoker = factor(Smoker,
+                                  levels = c(0, 1),
+                                  labels = c("no", "yes"))) |>
+  mutate(Veggies = factor(Veggies,
+                                  levels = c(0, 1),
+                                  labels = c("no", "yes"))) |>
+  mutate(HvyAlcoholConsump = factor(HvyAlcoholConsump,
+                                  levels = c(0, 1),
+                                  labels = c("no", "yes"))) |>
+  mutate(DiffWalk = factor(DiffWalk,
+                                  levels = c(0, 1),
+                                  labels = c("no", "yes"))) |>
+  mutate(Sex = factor(Sex,
+                                  levels = c(0, 1),
+                                  labels = c("female", "male"))) |>
+  mutate(Age = factor(Age,
+                                  levels = c(1:13),
+                                  labels = c("Age 18 to 24", "Age 25 to 29", "Age 30 to 34", "Age 35 to 39", "Age 40 to 44", "Age 45 to 49", "Age 50 to 54", "Age 55 to 59", "Age 60 to 64", "Age 65 to 69", "Age 70 to 74", "Age 75 to 79", "Age 80 or older")))
+
+dim(diab_df)
+str(diab_df)
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+-   At this point, I got data includes 253680 observations and 10 variables.
 
-# [Click here for the Modeling Page](Modeling.html)
+### 3.2 Check missing values
+
+```{r}
+# check missing value
+sum_na <- function(column) {
+  sum(is.na(column))
+}
+
+na_counts <- diab_df |>
+  summarise(across(everything(), sum_na))
+na_counts
+```
+
+-   There's no missing value data found.
+
+## 4. Summary the data
+
+### 4.1 Covariation between HighBP with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = HighBP)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   From the bubbleplot, we can note that in the group of no diabetes, lager portion of case with no high BP, while high BP dominates the group of prediabetes, suggesting the potential positive relationship between the two variables.
+
+### 4.2 Covariation between HighChol with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = HighChol)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   Similar with HighBP, we can note that in the group of no diabetes, lager portion of case with no high cholesterol, while high cholesterol dominates the group of prediabetes, suggesting the potential positive relationship between the two variables.
+
+### 4.3 Covariation between Smoker with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = Smoker)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   From the bubbleplot, we can note that in the group of no diabetes, lager portion of case with non smoker, while in the group of prediabetes, there are more smoker than non smoker, suggesting the potential positive relationship between the two variables.
+
+### 4.4 Covariation between BMI with Diabetes_binary
+
+```{r}
+ggplot(diab_df, aes(x = Diabetes_binary, y = BMI)) +
+  geom_boxplot()
+```
+
+-   The boxplot showed that the media value of BMI in prediabetes group is bigger than no diabetes group. 
+
+### 4.5 Covariation between Veggies with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = Veggies)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="red") 
+```
+
+-   Veggies case dominate both no diabetes and prediabetes groups, so the two variables do not show significant correlation.
+
+### 4.6 Covariation between HvyAlcoholConsump with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = HvyAlcoholConsump)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="red") 
+```
+
+-   Similar with previous Veggies, HvyAlcoholConsump did not increase the occurrence of prediabetes.
+
+### 4.7 Covariation between DiffWalk with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = DiffWalk)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   We can note that in no diabetes group, most case do not have diffwalk, while in prediabetes, the portion of diffwalk increased, but still less than no-diffwalk samples.
+
+### 4.8 Covariation between HighBP with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = HighBP)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   From the bubbleplot, we can note that in the group of no diabetes, lager portion of case with no high BP, while high BP dominates the group of prediabetes, suggesting the potential positive relationship between the two variables.
+
+### 4.9 Covariation between Sex with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = Sex)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   The plot indicates that the female dominates no diabetes group, while the portion of male increased in prediabetes group, which is almost half to half with female cases.
+
+
+### 4.10 Covariation between Age with Diabetes_binary
+
+```{r}
+ggplot(data = diab_df, aes(x = Diabetes_binary, y = Age)) +
+  geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
+```
+
+-   In general, as age getting bigger, the portion getting bigger first and then decreased in both diabetes groups. However, compared to no diabetes group, the younger people have less portion in prediabetes group, and the largest portion showed in age 65-69. 
+
+
+## [Click here for the Modeling Page](Modeling.html)

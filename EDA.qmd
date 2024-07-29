@@ -240,4 +240,8 @@ ggplot(data = diab_df, aes(x = Diabetes_binary, y = Age)) +
 
 -   In general, as age getting bigger, the portion getting bigger first and then decreased in both diabetes groups. However, compared to no diabetes group, the younger people have less portion in prediabetes group, and the largest portion showed in age 65-69.
 
+Finally, the clean dataset will be write out for modeling use.
+```{r}
+write.csv(diab_df, "diab_df.csv")
+```
 ## [Click here for the Modeling Page](Modeling.html)

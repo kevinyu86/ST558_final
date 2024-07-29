@@ -48,8 +48,9 @@ library(Metrics)
 library(randomForest)
 ```
 
-```{r setup, warning=FALSE}
+```{r}
 set.seed(3033)
+diab_df <- read.csv("diab_df.csv")
 intrain <- createDataPartition(y = diab_df$Diabetes_binary, p= 0.7, list = FALSE)
 training <- diab_df[intrain,]
 testing <- diab_df[-intrain,]

@@ -224,10 +224,33 @@ The following object is masked from 'package:ggplot2':
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3033</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>diab_df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diab_df.csv"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>intrain <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(<span class="at">y =</span> diab_df<span class="sc">$</span>Diabetes_binary, <span class="at">p=</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> diab_df[intrain,]</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> diab_df[<span class="sc">-</span>intrain,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>diab_df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Veggies, HvyAlcoholConsump, DiffWalk, Sex, Age) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Diabetes_binary =</span> <span class="fu">factor</span>(Diabetes_binary,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_diabetes"</span>, <span class="st">"prediabetes"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HighBP =</span> <span class="fu">factor</span>(HighBP,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_high"</span>, <span class="st">"high_BP"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HighChol =</span> <span class="fu">factor</span>(HighChol,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no_high_cholesterol"</span>, <span class="st">"high_cholesterol"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Smoker =</span> <span class="fu">factor</span>(Smoker,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sex =</span> <span class="fu">factor</span>(Sex,</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>),</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"female"</span>, <span class="st">"male"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Age =</span> <span class="fu">factor</span>(Age,</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">13</span>),</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Age_18_to_24"</span>, <span class="st">"Age_25_to_29"</span>, <span class="st">"Age_30_to_34"</span>, <span class="st">"Age_35_to_39"</span>, <span class="st">"Age_40_to_44"</span>, <span class="st">"Age_45_to_49"</span>, <span class="st">"Age_50_to_54"</span>, <span class="st">"Age_55_to_59"</span>, <span class="st">"Age_60_to_64"</span>, <span class="st">"Age_65_to_69"</span>, <span class="st">"Age_70_to_74"</span>, <span class="st">"Age_75_to_79"</span>, <span class="st">"Age_80_or_older"</span>)))</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>intrain <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(<span class="at">y =</span> diab_df<span class="sc">$</span>Diabetes_binary, <span class="at">p=</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>training <span class="ot">&lt;-</span> diab_df[intrain,]</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>testing <span class="ot">&lt;-</span> diab_df[<span class="sc">-</span>intrain,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="logistic-regression-models" class="level2">
@@ -269,7 +292,7 @@ The following object is masked from 'package:ggplot2':
 <span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>                 <span class="at">metric =</span> <span class="st">"logLoss"</span>)</span>
 <span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1011</span>)</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>lr_model2 <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> HighBP <span class="sc">+</span> HighChol <span class="sc">+</span> Smoker <span class="sc">+</span> BMI <span class="sc">+</span> HvyAlcoholConsump <span class="sc">+</span> Sex <span class="sc">+</span> Age, </span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>lr_model2 <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> HighBP <span class="sc">+</span> HighChol <span class="sc">+</span> Smoker <span class="sc">+</span> BMI <span class="sc">+</span> Sex <span class="sc">+</span> Age, </span>
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> training, </span>
 <span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"glm"</span>,</span>
 <span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl=</span> control,</span>
@@ -277,7 +300,7 @@ The following object is masked from 'package:ggplot2':
 <span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>                 <span class="at">metric =</span> <span class="st">"logLoss"</span>)</span>
 <span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1011</span>)</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>lr_model3 <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> HighBP <span class="sc">+</span> HighChol <span class="sc">+</span> Smoker <span class="sc">+</span> BMI <span class="sc">+</span> HvyAlcoholConsump <span class="sc">+</span> Sex <span class="sc">+</span> Age <span class="sc">+</span> Sex<span class="sc">*</span>Age, </span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>lr_model3 <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> HighBP <span class="sc">+</span> HighChol <span class="sc">+</span> Smoker <span class="sc">+</span> BMI <span class="sc">+</span> Sex <span class="sc">+</span> Age <span class="sc">+</span> Sex<span class="sc">*</span>Age, </span>
 <span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> training, </span>
 <span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"glm"</span>,</span>
 <span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl=</span> control,</span>
@@ -290,37 +313,36 @@ Call:
 NULL
 
 Coefficients:
-                              Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                 -4.762e+00  1.437e-01 -33.132  &lt; 2e-16 ***
-X                            2.488e-07  1.023e-07   2.432   0.0150 *  
-HighBPno_high               -9.339e-01  1.715e-02 -54.450  &lt; 2e-16 ***
-HighCholno_high_cholesterol -6.486e-01  1.585e-02 -40.918  &lt; 2e-16 ***
-Smokeryes                    1.044e-01  1.524e-02   6.849 7.41e-12 ***
-BMI                          6.369e-02  1.069e-03  59.606  &lt; 2e-16 ***
-Veggiesyes                  -1.802e-01  1.783e-02 -10.105  &lt; 2e-16 ***
-HvyAlcoholConsumpyes        -8.950e-01  4.502e-02 -19.878  &lt; 2e-16 ***
-DiffWalkyes                  6.966e-01  1.703e-02  40.896  &lt; 2e-16 ***
-Sexmale                      2.131e-01  1.524e-02  13.987  &lt; 2e-16 ***
-AgeAge_25_to_29              1.427e-01  1.695e-01   0.842   0.3999    
-AgeAge_30_to_34              3.783e-01  1.533e-01   2.467   0.0136 *  
-AgeAge_35_to_39              8.196e-01  1.452e-01   5.644 1.66e-08 ***
-AgeAge_40_to_44              1.021e+00  1.422e-01   7.183 6.82e-13 ***
-AgeAge_45_to_49              1.211e+00  1.402e-01   8.639  &lt; 2e-16 ***
-AgeAge_50_to_54              1.454e+00  1.387e-01  10.483  &lt; 2e-16 ***
-AgeAge_55_to_59              1.546e+00  1.383e-01  11.179  &lt; 2e-16 ***
-AgeAge_60_to_64              1.744e+00  1.380e-01  12.638  &lt; 2e-16 ***
-AgeAge_65_to_69              1.882e+00  1.379e-01  13.641  &lt; 2e-16 ***
-AgeAge_70_to_74              1.942e+00  1.383e-01  14.034  &lt; 2e-16 ***
-AgeAge_75_to_79              1.934e+00  1.392e-01  13.899  &lt; 2e-16 ***
-AgeAge_80_or_older           1.795e+00  1.393e-01  12.891  &lt; 2e-16 ***
+                          Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -6.311356   0.141732 -44.530  &lt; 2e-16 ***
+HighBPhigh_BP             0.934101   0.017151  54.463  &lt; 2e-16 ***
+HighCholhigh_cholesterol  0.648609   0.015852  40.916  &lt; 2e-16 ***
+Smokeryes                 0.103813   0.015237   6.813 9.56e-12 ***
+BMI                       0.063648   0.001069  59.567  &lt; 2e-16 ***
+Veggies                  -0.180036   0.017831 -10.097  &lt; 2e-16 ***
+HvyAlcoholConsump        -0.895082   0.045024 -19.880  &lt; 2e-16 ***
+DiffWalk                  0.697331   0.017032  40.943  &lt; 2e-16 ***
+Sexmale                   0.213306   0.015237  13.999  &lt; 2e-16 ***
+AgeAge_25_to_29           0.143677   0.169520   0.848   0.3967    
+AgeAge_30_to_34           0.378799   0.153340   2.470   0.0135 *  
+AgeAge_35_to_39           0.820082   0.145220   5.647 1.63e-08 ***
+AgeAge_40_to_44           1.021968   0.142222   7.186 6.68e-13 ***
+AgeAge_45_to_49           1.211588   0.140209   8.641  &lt; 2e-16 ***
+AgeAge_50_to_54           1.454527   0.138749  10.483  &lt; 2e-16 ***
+AgeAge_55_to_59           1.545629   0.138278  11.178  &lt; 2e-16 ***
+AgeAge_60_to_64           1.743891   0.137980  12.639  &lt; 2e-16 ***
+AgeAge_65_to_69           1.881372   0.137948  13.638  &lt; 2e-16 ***
+AgeAge_70_to_74           1.941156   0.138364  14.029  &lt; 2e-16 ***
+AgeAge_75_to_79           1.933661   0.139166  13.895  &lt; 2e-16 ***
+AgeAge_80_or_older        1.794351   0.139270  12.884  &lt; 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
     Null deviance: 143396  on 177576  degrees of freedom
-Residual deviance: 118632  on 177555  degrees of freedom
-AIC: 118676
+Residual deviance: 118638  on 177556  degrees of freedom
+AIC: 118680
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
@@ -331,34 +353,33 @@ Call:
 NULL
 
 Coefficients:
-                             Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                 -5.038002   0.143948 -34.999  &lt; 2e-16 ***
-HighBPno_high               -1.001177   0.017003 -58.884  &lt; 2e-16 ***
-HighCholno_high_cholesterol -0.676695   0.015719 -43.050  &lt; 2e-16 ***
-Smokeryes                    0.174062   0.014997  11.607  &lt; 2e-16 ***
-BMI                          0.072827   0.001057  68.895  &lt; 2e-16 ***
-HvyAlcoholConsumpyes        -0.949455   0.044848 -21.171  &lt; 2e-16 ***
-Sexmale                      0.143571   0.014944   9.608  &lt; 2e-16 ***
-AgeAge_25_to_29              0.145960   0.170942   0.854   0.3932    
-AgeAge_30_to_34              0.351009   0.154835   2.267   0.0234 *  
-AgeAge_35_to_39              0.829882   0.146531   5.664 1.48e-08 ***
-AgeAge_40_to_44              1.056286   0.143513   7.360 1.84e-13 ***
-AgeAge_45_to_49              1.278286   0.141491   9.034  &lt; 2e-16 ***
-AgeAge_50_to_54              1.544495   0.140035  11.029  &lt; 2e-16 ***
-AgeAge_55_to_59              1.653394   0.139564  11.847  &lt; 2e-16 ***
-AgeAge_60_to_64              1.853007   0.139279  13.304  &lt; 2e-16 ***
-AgeAge_65_to_69              1.983976   0.139258  14.247  &lt; 2e-16 ***
-AgeAge_70_to_74              2.055850   0.139663  14.720  &lt; 2e-16 ***
-AgeAge_75_to_79              2.085435   0.140425  14.851  &lt; 2e-16 ***
-AgeAge_80_or_older           2.022205   0.140466  14.396  &lt; 2e-16 ***
+                          Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)              -6.789225   0.142499 -47.644  &lt; 2e-16 ***
+HighBPhigh_BP             0.992919   0.016975  58.492  &lt; 2e-16 ***
+HighCholhigh_cholesterol  0.676444   0.015694  43.103  &lt; 2e-16 ***
+Smokeryes                 0.142769   0.014927   9.565  &lt; 2e-16 ***
+BMI                       0.074049   0.001056  70.139  &lt; 2e-16 ***
+Sexmale                   0.139839   0.014912   9.378  &lt; 2e-16 ***
+AgeAge_25_to_29           0.144858   0.171001   0.847   0.3969    
+AgeAge_30_to_34           0.354986   0.154911   2.292   0.0219 *  
+AgeAge_35_to_39           0.841129   0.146548   5.740 9.49e-09 ***
+AgeAge_40_to_44           1.069763   0.143533   7.453 9.12e-14 ***
+AgeAge_45_to_49           1.288800   0.141511   9.107  &lt; 2e-16 ***
+AgeAge_50_to_54           1.556603   0.140057  11.114  &lt; 2e-16 ***
+AgeAge_55_to_59           1.667831   0.139587  11.948  &lt; 2e-16 ***
+AgeAge_60_to_64           1.872873   0.139302  13.445  &lt; 2e-16 ***
+AgeAge_65_to_69           2.005633   0.139280  14.400  &lt; 2e-16 ***
+AgeAge_70_to_74           2.084074   0.139683  14.920  &lt; 2e-16 ***
+AgeAge_75_to_79           2.118730   0.140440  15.086  &lt; 2e-16 ***
+AgeAge_80_or_older        2.064642   0.140482  14.697  &lt; 2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
     Null deviance: 143396  on 177576  degrees of freedom
-Residual deviance: 120425  on 177558  degrees of freedom
-AIC: 120463
+Residual deviance: 120985  on 177559  degrees of freedom
+AIC: 121021
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
@@ -369,46 +390,45 @@ Call:
 NULL
 
 Coefficients:
-                              Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                  -4.698742   0.190601 -24.652  &lt; 2e-16 ***
-HighBPno_high                -1.009166   0.017051 -59.185  &lt; 2e-16 ***
-HighCholno_high_cholesterol  -0.680517   0.015740 -43.235  &lt; 2e-16 ***
-Smokeryes                     0.166024   0.015051  11.031  &lt; 2e-16 ***
-BMI                           0.072495   0.001057  68.556  &lt; 2e-16 ***
-HvyAlcoholConsumpyes         -0.947571   0.044878 -21.114  &lt; 2e-16 ***
-Sexmale                      -0.468616   0.277004  -1.692 0.090697 .  
-AgeAge_25_to_29               0.138786   0.226813   0.612 0.540606    
-AgeAge_30_to_34               0.306171   0.207267   1.477 0.139627    
-AgeAge_35_to_39               0.752540   0.197079   3.818 0.000134 ***
-AgeAge_40_to_44               0.832031   0.193955   4.290 1.79e-05 ***
-AgeAge_45_to_49               1.007148   0.191592   5.257 1.47e-07 ***
-AgeAge_50_to_54               1.276038   0.189295   6.741 1.57e-11 ***
-AgeAge_55_to_59               1.344904   0.188555   7.133 9.84e-13 ***
-AgeAge_60_to_64               1.548764   0.188139   8.232  &lt; 2e-16 ***
-AgeAge_65_to_69               1.627079   0.188101   8.650  &lt; 2e-16 ***
-AgeAge_70_to_74               1.655331   0.188647   8.775  &lt; 2e-16 ***
-AgeAge_75_to_79               1.751998   0.189414   9.250  &lt; 2e-16 ***
-AgeAge_80_or_older            1.620036   0.189416   8.553  &lt; 2e-16 ***
-`Sexmale:AgeAge_25_to_29`    -0.062344   0.346675  -0.180 0.857283    
-`Sexmale:AgeAge_30_to_34`     0.016633   0.312690   0.053 0.957579    
-`Sexmale:AgeAge_35_to_39`     0.083810   0.295180   0.284 0.776466    
-`Sexmale:AgeAge_40_to_44`     0.412033   0.288531   1.428 0.153282    
-`Sexmale:AgeAge_45_to_49`     0.515810   0.284317   1.814 0.069646 .  
-`Sexmale:AgeAge_50_to_54`     0.505102   0.281281   1.796 0.072539 .  
-`Sexmale:AgeAge_55_to_59`     0.586369   0.280157   2.093 0.036349 *  
-`Sexmale:AgeAge_60_to_64`     0.576736   0.279446   2.064 0.039032 *  
-`Sexmale:AgeAge_65_to_69`     0.684550   0.279240   2.451 0.014227 *  
-`Sexmale:AgeAge_70_to_74`     0.775146   0.279885   2.770 0.005614 ** 
-`Sexmale:AgeAge_75_to_79`     0.637016   0.281363   2.264 0.023572 *  
-`Sexmale:AgeAge_80_or_older`  0.800156   0.281345   2.844 0.004455 ** 
+                               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)                  -6.4727280  0.1895406 -34.150  &lt; 2e-16 ***
+HighBPhigh_BP                 1.0011320  0.0170250  58.804  &lt; 2e-16 ***
+HighCholhigh_cholesterol      0.6803918  0.0157151  43.295  &lt; 2e-16 ***
+Smokeryes                     0.1346033  0.0149798   8.986  &lt; 2e-16 ***
+BMI                           0.0737097  0.0010562  69.786  &lt; 2e-16 ***
+Sexmale                      -0.4526361  0.2770782  -1.634  0.10234    
+AgeAge_25_to_29               0.1462333  0.2270051   0.644  0.51946    
+AgeAge_30_to_34               0.3196996  0.2074655   1.541  0.12332    
+AgeAge_35_to_39               0.7799933  0.1971794   3.956 7.63e-05 ***
+AgeAge_40_to_44               0.8642999  0.1940541   4.454 8.43e-06 ***
+AgeAge_45_to_49               1.0336292  0.1916962   5.392 6.97e-08 ***
+AgeAge_50_to_54               1.3005789  0.1894025   6.867 6.57e-12 ***
+AgeAge_55_to_59               1.3715949  0.1886652   7.270 3.60e-13 ***
+AgeAge_60_to_64               1.5793941  0.1882518   8.390  &lt; 2e-16 ***
+AgeAge_65_to_69               1.6581361  0.1882130   8.810  &lt; 2e-16 ***
+AgeAge_70_to_74               1.6941786  0.1887552   8.976  &lt; 2e-16 ***
+AgeAge_75_to_79               1.7949223  0.1895200   9.471  &lt; 2e-16 ***
+AgeAge_80_or_older            1.6715157  0.1895272   8.819  &lt; 2e-16 ***
+`Sexmale:AgeAge_25_to_29`    -0.0762189  0.3467899  -0.220  0.82604    
+`Sexmale:AgeAge_30_to_34`     0.0009649  0.3128396   0.003  0.99754    
+`Sexmale:AgeAge_35_to_39`     0.0542548  0.2952317   0.184  0.85419    
+`Sexmale:AgeAge_40_to_44`     0.3766460  0.2885878   1.305  0.19185    
+`Sexmale:AgeAge_45_to_49`     0.4866682  0.2843683   1.711  0.08701 .  
+`Sexmale:AgeAge_50_to_54`     0.4826159  0.2813389   1.715  0.08627 .  
+`Sexmale:AgeAge_55_to_59`     0.5641530  0.2802161   2.013  0.04409 *  
+`Sexmale:AgeAge_60_to_64`     0.5576006  0.2795069   1.995  0.04605 *  
+`Sexmale:AgeAge_65_to_69`     0.6682735  0.2793014   2.393  0.01673 *  
+`Sexmale:AgeAge_70_to_74`     0.7563675  0.2799438   2.702  0.00690 ** 
+`Sexmale:AgeAge_75_to_79`     0.6204861  0.2814158   2.205  0.02746 *  
+`Sexmale:AgeAge_80_or_older`  0.7850866  0.2814055   2.790  0.00527 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
     Null deviance: 143396  on 177576  degrees of freedom
-Residual deviance: 120315  on 177546  degrees of freedom
-AIC: 120377
+Residual deviance: 120872  on 177547  degrees of freedom
+AIC: 120932
 
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
@@ -425,9 +445,9 @@ Number of resamples: 5
 
 logLoss 
             Min.   1st Qu.    Median      Mean   3rd Qu.      Max. NA's
-Model1 0.3323702 0.3334882 0.3344442 0.3341597 0.3347904 0.3357057    0
-Model2 0.3380380 0.3386187 0.3390793 0.3391894 0.3394823 0.3407288    0
-Model3 0.3376378 0.3384823 0.3389833 0.3389578 0.3393209 0.3403649    0</code></pre>
+Model1 0.3323953 0.3335058 0.3344196 0.3341737 0.3348244 0.3357233    0
+Model2 0.3400059 0.3402233 0.3407485 0.3407626 0.3408177 0.3420174    0
+Model3 0.3395890 0.3400741 0.3406467 0.3405209 0.3406511 0.3416434    0</code></pre>
 </div>
 </div>
 <ul>
@@ -455,7 +475,7 @@ Model3 0.3376378 0.3384823 0.3389833 0.3389578 0.3393209 0.3403649    0</code></
 <pre><code>CART 
 
 177577 samples
-    10 predictor
+     9 predictor
      2 classes: 'no_diabetes', 'prediabetes' 
 
 No pre-processing
@@ -464,7 +484,7 @@ Summary of sample sizes: 142061, 142062, 142062, 142061, 142062
 Resampling results across tuning parameters:
 
   cp     logLoss  
-  0.001  0.3582301
+  0.001  0.3582282
   0.011  0.4037576
   0.021  0.4037576
   0.031  0.4037576
@@ -486,8 +506,6 @@ The final value used for the model was cp = 0.001.</code></pre>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># choose best cp</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>best_cp <span class="ot">&lt;-</span> ct_model<span class="sc">$</span>bestTune<span class="sc">$</span>cp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="random-forest-model" class="level2">
@@ -495,20 +513,20 @@ The final value used for the model was cp = 0.001.</code></pre>
 <p>In this part, I will fit a <strong>Random Forest Model</strong>. A Random Forest is an ensemble learning method primarily used for classification and regression tasks. It consists of a collection of decision trees (hence “forest”) that work together to improve the model’s performance and robustness. The main idea is to combine the predictions of multiple decision trees to obtain a more accurate and stable prediction.</p>
 <p>Compared to single basic classification tree model, random forest shows the following advantages: - <strong>Better Performance</strong>: Random Forests generally outperform single decision trees in terms of accuracy and generalization to new data. - <strong>Reduced Overfitting</strong>: Single decision trees are prone to overfitting, especially when they are deep and complex. Random Forests mitigate this risk by averaging the predictions of multiple trees. - <strong>Handling High Dimensionality</strong>: Random Forests can handle a large number of features and are effective in identifying the most important features. - <strong>Versatility</strong>: Random Forests can be used for both classification and regression tasks and are effective across various domains and types of data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#train model</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1001</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> ., </span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> training, </span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"rf"</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl=</span> control,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">tuneGrid =</span> <span class="fu">expand.grid</span>(<span class="at">mtry =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">metric =</span> <span class="st">"logLoss"</span>)</span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#train model</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1001</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">train</span>(Diabetes_binary <span class="sc">~</span> ., </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> training, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">method =</span> <span class="st">"rf"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">trControl=</span> control,</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">tuneGrid =</span> <span class="fu">expand.grid</span>(<span class="at">mtry =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">metric =</span> <span class="st">"logLoss"</span>)</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(rf_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Forest 
 
 177577 samples
-    10 predictor
+     9 predictor
      2 classes: 'no_diabetes', 'prediabetes' 
 
 No pre-processing
@@ -532,35 +550,32 @@ The final value used for the model was mtry = 1.</code></pre>
 <h2 class="anchored" data-anchor-id="final-model-selection">6. Final Model Selection</h2>
 <p>Now, I have three best models, <strong>lr_best_model</strong>, <strong>ct_best_model</strong>, and <strong>rf_best_model</strong>. Next, I will predict the test dataset using all the three models, and evaluate the model performance using logLoss as metric.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predict the testing data</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>lr_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lr_best_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>ct_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(ct_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>rf_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the logLoss value</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>obs_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(testing<span class="sc">$</span>Diabetes_binary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: NAs introduced by coercion</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>lr_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, lr_test_pred<span class="sc">$</span>prediabetes)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>ct_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, ct_test_pred<span class="sc">$</span>prediabetes)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>rf_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, rf_test_pred<span class="sc">$</span>prediabetes)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare models</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>final_results <span class="ot">&lt;-</span> <span class="fu">list</span>(lr_log_loss_value, ct_log_loss_value, rf_log_loss_value)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predict the testing data</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>lr_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lr_best_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>ct_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(ct_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>rf_test_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf_model, <span class="at">newdata =</span> testing, <span class="at">type =</span> <span class="st">"prob"</span>)</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the logLoss value</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>obs_value <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(testing<span class="sc">$</span>Diabetes_binary)</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>lr_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, lr_test_pred<span class="sc">$</span>prediabetes)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>ct_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, ct_test_pred<span class="sc">$</span>prediabetes)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>rf_log_loss_value <span class="ot">&lt;-</span> <span class="fu">logLoss</span>(obs_value, rf_test_pred<span class="sc">$</span>prediabetes)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare models</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>final_results <span class="ot">&lt;-</span> <span class="fu">list</span>(lr_log_loss_value, ct_log_loss_value, rf_log_loss_value)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(final_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-[1] NA
+[1] 2.643875
 
 [[2]]
-[1] NA
+[1] 2.42689
 
 [[3]]
-[1] NA</code></pre>
+[1] Inf</code></pre>
 </div>
 </div>
 <p><strong>Conclusion</strong></p>

@@ -260,4 +260,4 @@ diab_df <- df |>
                                   labels = c("Age_18_to_24", "Age_25_to_29", "Age_30_to_34", "Age_35_to_39", "Age_40_to_44", "Age_45_to_49", "Age_50_to_54", "Age_55_to_59", "Age_60_to_64", "Age_65_to_69", "Age_70_to_74", "Age_75_to_79", "Age_80_or_older")))
 ```
 
-## [Click here for the Modeling Page](Modeling.html)
+

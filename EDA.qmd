@@ -8,15 +8,63 @@ editor: visual
 
 ## Final project for ST558
 
+# EDA Notebook for Diabetes Health Indicators Dataset
+
 ## 1. Introduction
 
-briefly describes the data and the variables you have to work with (just discuss the ones you’ll investigate/use in your analysis).
+### 1.1 Dataset
 
-• describes the purpose of your EDA and ultimate goal of modeling.
+Diabetes \_ binary \_ health \_ indicators Dataset is a clean dataset of 253,680 survey responses to the CDC's BRFSS2015. The target variable Diabetes_binary has 2 classes. 0 is for no diabetes, and 1 is for prediabetes or diabetes. This dataset has 21 feature variables which have been reported can influencing diabetes disease and other chronic health conditions based on diabetes disease research.
 
-diabetes \_ binary \_ health \_ indicators \_ BRFSS2015.csv is a clean dataset of 253,680 survey responses to the CDC's BRFSS2015. The target variable Diabetes_binary has 2 classes. 0 is for no diabetes, and 1 is for prediabetes or diabetes. This dataset has 21 feature variables and is not balanced.
+Among all variables, I tried to select features, which I thought could be important risk factors for diabetes and other chronic illnesses. The selected features from the BRFSS 2015 dataset are:
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+**Response Variable / Dependent Variable:**
+
+**Diabetes_binary** O for no diabetes, 1 for prediabetes.
+
+**Independent Variables:**
+
+**HighBP, High Blood Pressure**
+
+0 = no high BP 1 = high BP
+
+**HighChol, High Cholesterol**
+
+0 = no high cholesterol 1 = high cholesterol
+
+**BMI**
+
+Body Mass Index (BMI)
+
+**Smoking**
+
+Have you smoked at least 100 cigarettes in your entire life? \[Note: 5 packs = 100 cigarettes\] 0 = no 1 = yes
+
+**PhysActivity, Physical Activity**
+
+Adults who reported doing physical activity in past 30 days - not including job 0 = no 1 = yes
+
+**Veggies** Consume Vegetables 1 or more times per day 0 = no 1 = yes
+
+**HvyAlcoholConsump, Alcohol Consumption**
+
+Heavy drinkers (adult men having more than 14 drinks per week and adult women having more than 7 drinks per week) 0 = no 1 = yes
+
+**DiffWalk** Do you have serious difficulty walking or climbing stairs? 0 = no 1 = yes
+
+**Sex** Indicate sex of respondent.
+
+**Age** 13-level age category.
+
+### 1.2 EDA and modeling
+
+Exploratory Data Analysis (EDA) is a crucial step in the data science workflow to process this dataset. The primary purpose of EDA in this project including:
+
+-   **Identify Missing Values**: Determine the extent and pattern of missing data, which helps in deciding how to handle them (e.g., imputation, deletion).
+
+-   **Examine Relationships**: Explore correlations and interactions between variables to uncover potential predictors and multicollinearity issues.
+
+After EDA, we will employ several models for this dataset. The ultimate goal of modeling is to develop a predictive models that accurately captures the relationship between input features (response variables) and the target variable (diabetes here) to make reliable predictions on new, unseen data.
 
 ## 2. Get the Data
 
@@ -51,14 +99,14 @@ In order to do this part, I referenced the codebook which says what each column/
 diab_df <- df |>
   select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Veggies, HvyAlcoholConsump, DiffWalk, Sex, Age) |>
   mutate(Diabetes_binary = factor(Diabetes_binary,
-                                  levels = c(0, 1, 2),
-                                  labels = c("no diabetes", "prediabetes", "diabetes"))) |>
+                                  levels = c(0, 1),
+                                  labels = c("no_diabetes", "prediabetes"))) |>
   mutate(HighBP = factor(HighBP,
                                   levels = c(0, 1),
-                                  labels = c("no high", "high BP"))) |>
+                                  labels = c("no_high", "high_BP"))) |>
   mutate(HighChol = factor(HighChol,
                                   levels = c(0, 1),
-                                  labels = c("no high cholesterol", "high cholesterol"))) |>
+                                  labels = c("no_high_cholesterol", "high_cholesterol"))) |>
 
   mutate(Smoker = factor(Smoker,
                                   levels = c(0, 1),
@@ -77,7 +125,7 @@ diab_df <- df |>
                                   labels = c("female", "male"))) |>
   mutate(Age = factor(Age,
                                   levels = c(1:13),
-                                  labels = c("Age 18 to 24", "Age 25 to 29", "Age 30 to 34", "Age 35 to 39", "Age 40 to 44", "Age 45 to 49", "Age 50 to 54", "Age 55 to 59", "Age 60 to 64", "Age 65 to 69", "Age 70 to 74", "Age 75 to 79", "Age 80 or older")))
+                                  labels = c("Age_18_to_24", "Age_25_to_29", "Age_30_to_34", "Age_35_to_39", "Age_40_to_44", "Age_45_to_49", "Age_50_to_54", "Age_55_to_59", "Age_60_to_64", "Age_65_to_69", "Age_70_to_74", "Age_75_to_79", "Age_80_or_older")))
 
 dim(diab_df)
 str(diab_df)
@@ -136,7 +184,7 @@ ggplot(diab_df, aes(x = Diabetes_binary, y = BMI)) +
   geom_boxplot()
 ```
 
--   The boxplot showed that the media value of BMI in prediabetes group is bigger than no diabetes group. 
+-   The boxplot showed that the media value of BMI in prediabetes group is bigger than no diabetes group.
 
 ### 4.5 Covariation between Veggies with Diabetes_binary
 
@@ -183,7 +231,6 @@ ggplot(data = diab_df, aes(x = Diabetes_binary, y = Sex)) +
 
 -   The plot indicates that the female dominates no diabetes group, while the portion of male increased in prediabetes group, which is almost half to half with female cases.
 
-
 ### 4.10 Covariation between Age with Diabetes_binary
 
 ```{r}
@@ -191,7 +238,6 @@ ggplot(data = diab_df, aes(x = Diabetes_binary, y = Age)) +
   geom_count(aes(size=..prop.., group=Diabetes_binary), colour="blue") 
 ```
 
--   In general, as age getting bigger, the portion getting bigger first and then decreased in both diabetes groups. However, compared to no diabetes group, the younger people have less portion in prediabetes group, and the largest portion showed in age 65-69. 
-
+-   In general, as age getting bigger, the portion getting bigger first and then decreased in both diabetes groups. However, compared to no diabetes group, the younger people have less portion in prediabetes group, and the largest portion showed in age 65-69.
 
 ## [Click here for the Modeling Page](Modeling.html)

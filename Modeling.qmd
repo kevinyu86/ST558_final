@@ -213,6 +213,6 @@ print(final_results)
 
 **Conclusion**
 
-The logistic regression model return the logLoss score 2.64 for testing dataset, classification tree model returns logLoss score 2.43, while the random forest model returns a infinite logLoss score. We can conclude that the classification tree model shows lower lossLog score, indicates a better prediction performance.
+The logistic regression model returns the logLoss score 2.64 for testing dataset, classification tree model returns logLoss score 2.43, while the random forest model returns an infinite logLoss score. We can conclude that the classification tree model shows lower lossLog score, which indicates a better prediction performance.
 
-## [Click here for the EDA Page](docs/EDA.html)
+[Click here for the EDA Page](docs/EDA.html)

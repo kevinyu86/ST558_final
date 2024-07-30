@@ -1,16 +1,24 @@
 # start from the rstudio/plumber image
 FROM rocker/r-ver:4.4.1
 
+
 # install the linux libraries needed for plumber
-RUN apt-get update -qq && apt-get install -y  libssl-dev  libcurl4-gnutls-dev  libpng-dev
-RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
+RUN apt-get update -qq && apt-get install -y \
+  libssl-dev \
+  libcurl4-gnutls-dev
 
-# install plumber, GGally
-RUN R -e "install.packages('remotes')"
-RUN R -e "install.packages('GGally')"
-RUN Rscript -e "remotes::install_version('plumber', upgrade='never', version = '1.2.2')"
+# create the application folder
+RUN mkdir -p ~/application
 
+# copy everything from the current directory into the container
+COPY "/" "application/"
+WORKDIR "application/"
+
+# open port 80 to traffic
 EXPOSE 8000
+
+# install plumber
+RUN R -e "install.packages('plumber')"
 
 # when the container starts, start the API.R script
 ENTRYPOINT ["R", "-e", \

@@ -20,7 +20,7 @@ Among all variables, I tried to select features, which I thought could be import
 
 **Response Variable / Dependent Variable:**
 
-**Diabetes_binary** O for no diabetes, 1 for prediabetes.
+**Diabetes_binary** 0 for no diabetes, 1 for prediabetes.
 
 **Independent Variables:**
 
@@ -213,7 +213,6 @@ ggplot(data = diab_df, aes(x = Diabetes_binary, y = DiffWalk)) +
 
 -   We can note that in no diabetes group, most case do not have diffwalk, while in prediabetes, the portion of diffwalk increased, but still less than no-diffwalk samples.
 
-
 ### 4.8 Covariation between Sex with Diabetes_binary
 
 ```{r}
@@ -232,12 +231,11 @@ ggplot(data = diab_df, aes(x = Diabetes_binary, y = Age)) +
 
 -   In general, as age getting bigger, the portion getting bigger first and then decreased in both diabetes groups. However, compared to no diabetes group, the younger people have less portion in prediabetes group, and the largest portion showed in age 65-69.
 
-
 Based on the covariation analysis, some vairables do not show significant relationship with target variable. We will drop them in following modeling analysis, including Veggies, HvyAlcoholConsump and DiffWalk.
 
 ```{r}
 diab_df <- df |>
-  select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Veggies, HvyAlcoholConsump, DiffWalk, Sex, Age) |>
+  select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Sex, Age) |>
   mutate(Diabetes_binary = factor(Diabetes_binary,
                                   levels = c(0, 1),
                                   labels = c("no_diabetes", "prediabetes"))) |>
@@ -259,5 +257,3 @@ diab_df <- df |>
                                   levels = c(1:13),
                                   labels = c("Age_18_to_24", "Age_25_to_29", "Age_30_to_34", "Age_35_to_39", "Age_40_to_44", "Age_45_to_49", "Age_50_to_54", "Age_55_to_59", "Age_60_to_64", "Age_65_to_69", "Age_70_to_74", "Age_75_to_79", "Age_80_or_older")))
 ```
-
-

@@ -52,7 +52,7 @@ library(randomForest)
 set.seed(3033)
 df <- read.csv("diabetes_binary_health_indicators_BRFSS2015.csv")
 diab_df <- df |>
-  select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Veggies, HvyAlcoholConsump, DiffWalk, Sex, Age) |>
+  select(Diabetes_binary, HighBP, HighChol, Smoker, BMI, Sex, Age) |>
   mutate(Diabetes_binary = factor(Diabetes_binary,
                                   levels = c(0, 1),
                                   labels = c("no_diabetes", "prediabetes"))) |>

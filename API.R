@@ -47,34 +47,47 @@ ct_model <- rpart(Diabetes_binary ~ .,
 #* @param Sex  0=female, 1=male
 #* @param Age 
 
-function(HighBP=0, HighChol=0, BMI=28.4, Smoker=0, Sex=0, Age = 9) {
+function(HighBP=0, HighChol=0, BMI=28.4, Smoker=0, Sex=0, Age=9) {
   # Create a new data frame with the input values
   new_data <- data.frame(
-    HighBP = as.factor(HighBP),
-    HighChol = as.factor(HighChol),
-    BMI = BMI,
-    Smoker = as.factor(Smoker),
-    Sex = as.factor(Sex),
-    Age = as.factor(Age),
+    HighBP = factor(HighBP, levels = c(0, 1),
+                    labels = c("no_high", "high_BP")),
+    HighChol = factor(HighChol, levels = c(0, 1),
+                      labels = c("no_high_cholesterol", "high_cholesterol")),
+    BMI = as.numeric(BMI),
+    Smoker = factor(Smoker, levels = c(0, 1),
+                    labels = c("no", "yes")),
+    Sex = factor(Sex, levels = c(0, 1),
+                 labels = c("female", "male")),
+    Age = factor(Age, levels = c(1:13),
+                 labels = c("Age_18_to_24", "Age_25_to_29", "Age_30_to_34", "Age_35_to_39", "Age_40_to_44", "Age_45_to_49", "Age_50_to_54", "Age_55_to_59", "Age_60_to_64", "Age_65_to_69", "Age_70_to_74", "Age_75_to_79", "Age_80_or_older"))
   )
   
   # Make prediction
-  prediction <- predict(model, new_data, type = "prob")
+  prediction <- predict(ct_model, new_data, type = "prob")
   
   # Convert prediction to class labels
-  predicted_class <- ifelse(prediction > 0.5, "prediabetes", "no_diabetes")
+  predicted_class <- ifelse(prediction[[2]] > 0.5, "prediabetes", "no_diabetes")
   
   # Return the predicted class
-  return(list(predicted_class = predicted_class))
+  return(predicted_class)
 }
+
+# examples
+
+# http://127.0.0.1:8000/pred?HighBP=1&HighChol=0&Smoker=0&BMI=34&Sex=0&Age=12
+# http://127.0.0.1:8000/pred?HighBP=1&HighChol=0&Smoker=1&BMI=25&Sex=1&Age=9
+# http://127.0.0.1:8000/pred?HighBP=0&HighChol=1&Smoker=0&BMI=12&Sex=0&Age=2
 
 
 # API function for info endpoint
 
 #* @get /info
 function(){
-  "Xingwang Yu"
-  "https://kevinyu86.github.io/ST558_final/"
+  "Xingwang Yu, https://kevinyu86.github.io/ST558_final/"
 }
+
+
+
 
 

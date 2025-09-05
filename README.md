@@ -1,4 +1,4 @@
-# ST558_final
+# EDA_Modeling_API
 
 ## 1. Introduction
 
